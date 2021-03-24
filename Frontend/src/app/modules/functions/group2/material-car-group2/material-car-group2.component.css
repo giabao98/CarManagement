@@ -1,0 +1,13 @@
+
+.m-portlet__body {
+    margin-right: 15px;
+    margin-left: 15px;
+}
+
+.group-2.m-portlet.m-portlet-mobile {
+    margin-right: 15px;
+    margin-left: 15px;
+}
+th {
+    text-align: center !important;
+}

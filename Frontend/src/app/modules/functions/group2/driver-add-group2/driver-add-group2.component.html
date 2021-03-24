@@ -1,0 +1,219 @@
+<div [@routerTransition]>
+   <div class="m-content">
+      <div class="m-portlet m-portlet__header m-portlet-mobile">
+         <div class="m-portlet__nav">
+            <ul>
+               <li>
+                  <a routerLink="/app/admin/driver-add">
+                     <i class="flaticon-add"></i>
+                     Thêm mới
+                  </a>
+               </li>
+               <li>
+                  <a routerLink="/app/admin/driver-edit">
+                     <i class="flaticon-edit"></i> Chỉnh sửa
+                  </a>
+               </li>
+               <li>
+                  <span (click)="search()" routerLink="/app/admin/driver">
+                     <i class="flaticon-search"></i>
+                     Tìm kiếm
+                  </span>
+               </li>
+               
+            </ul>
+         </div>
+      </div>
+      <div class="m-subheader">
+         <div class="d-flex align-items-center">
+            <div class="mr-auto col-xs-6">
+               <span class="m-section__sub m-section__sub--separator">
+                  {{ l("Thêm tài xế") }}
+               </span>
+               <span class="m-section__sub m-section__sub--separator active">
+                  <a routerLink="/app/admin/driver">{{ l("Quản lý tài xế") }} {{ currentUserName }}</a>
+               </span>
+            </div>
+         </div>
+      </div>
+   </div>
+
+   <div class="Group-2 m-portlet m-portlet-mobile">
+      <div class="m-portlet__body">
+         <div class="add-form">
+            <form>
+               <div class="row">
+                  <div class="col-md-6">
+                     <label for="">Họ tên</label>
+                     <div class="form-group">
+                        <input [formControl]="addFormControl" id="driver-add"
+                           class="ui-inputtext ui-widget ui-state-default form-control" name="driver_add_HoTen"
+                           [(ngModel)]="driverInsert.taiXe_HoTen" type="text" maxlength="50" />
+                     </div>
+                  </div>
+
+                  <div class="col-md-6">
+                     <label for="">Ngày bắt đầu làm</label>
+                     <div class="form-group">
+                        <input [formControl]="addFormControl" id="driver-add"
+                           class="ui-inputtext ui-widget ui-state-default form-control" type="date"
+                           name="driver_add_NgayBatDauLam" [(ngModel)]="NgayBatDauLam" />
+                     </div>
+                  </div>
+               </div>
+
+               <div class="row">
+                  <div class="col-md-6">
+                     <label for="">Mức lương</label>
+                     <div class="form-group">
+                        <input [formControl]="addFormControl" id="driver-add"
+                           class="ui-inputtext ui-widget ui-state-default form-control" type="number"
+                           name="driver_add_MucLuong" [(ngModel)]="driverInsert.taiXe_MucLuong" step="100000" />
+                     </div>
+                  </div>
+
+                  <div class="col-md-6">
+                     <label for="">Hạng giấy phép lái xe</label>
+                     <div class="form-group">
+                        <p-dropdown [formControl]="addFormControl" [options]="licenses" name="selectedLicense"
+                           [(ngModel)]="driverInsert.taiXe_HangBangLai"></p-dropdown>
+                     </div>
+                  </div>
+               </div>
+
+               <!-- <div class="row">
+                  <div class="col-md-4">
+                     <div class="form-group">
+                        <label for="">Chọn tệp</label>
+                        <input [formControl]="addFormControl" id="driver-add"
+                           class="ui-inputtext ui-widget ui-state-default form-control" type="file"
+                           name="driver_add_ChonTep" [(ngModel)]="driverInsert.taiXe_UrlThongTin" />
+                     </div>
+                  </div>
+
+                  <div class="col-md-2"></div>
+                  <div class="col-md-4">
+                     <div class="form-group">
+                        <label for="">Chọn ảnh</label>
+                        <input [formControl]="addFormControl" id="driver-add"
+                           class="ui-inputtext ui-widget ui-state-default form-control" type="file"
+                           name="driver_add_ChonAnh" [(ngModel)]="driverInsert.taiXe_UrlAnh" />
+                     </div>
+                  </div>
+               </div> -->
+            </form>
+
+            <div class="row">
+               <div class="col-md-4"></div>
+               <div class="container">
+                  <div class="col-md-4 save-confirm" style="margin-top: 20px;">
+                     <form class="m-content" #roleForm="ngForm" novalidate (ngSubmit)="finalConfirm()"
+                        autocomplete="off">
+                        <div class="m-portlet__header m-portlet-mobile">
+                           <div class="m-portlet__nav">
+                              <ul>
+                                 <li>
+                                    <a style="cursor: pointer;" (click)="cancelConfirm()"><i class="fa fa-times"></i>
+                                       Hủy</a>
+                                 </li>
+                                 <li>
+                                    <a style="cursor: pointer;" (click)="finalConfirm()"><i class="fa fa-check"></i>
+                                       Lưu</a>
+                                 </li>
+                              </ul>
+                           </div>
+                        </div>
+                     </form>
+                  </div>
+               </div>
+               <div class="col-md-4"></div>
+            </div>
+         </div>
+
+         <div class="row align-items-center">
+            <!--<Primeng-TurboTable-Start>-->
+            <div class="primeng-datatable-container">
+               <p-table #dataTable [value]="primengTableHelper.records" [paginator]="
+                      primengTableHelper.totalRecordsCount === 0 ? false : true
+                   " [rows]="primengTableHelper.defaultRecordsCountPerPage" [rowsPerPageOptions]="
+                      primengTableHelper.predefinedRecordsCountPerPage
+                   " totalRecords="totalRecords" pageLinks="3">
+                  <ng-template pTemplate="header">
+                     <tr>
+                        <th class="table-checkbox"></th>
+                        <th class="th-STT">
+                           STT
+                        </th>
+                        <th class="th-MaTaiXe">
+                           Mã tài xế
+                        </th>
+                        <th>
+                           Tên tài xế
+                        </th>
+                        <th>
+                           Hạng bằng lái
+                        </th>
+                        <th>
+                           Mức lương
+                        </th>
+                        <th>
+                           Trạng thái làm việc
+                        </th>
+                     </tr>
+                  </ng-template>
+
+                  <ng-template pTemplate="body" let-record="$implicit">
+                     <tr>
+                        <td>
+                           <label class="m-radio" for="Theme_Default-{{ record.ma }}">
+                              <input id="Theme_Default-{{ record.ma }}" name="Theme" [(ngModel)]="driverId"
+                                 value="{{ record.ma }}" type="radio" />
+                              <span></span>
+                           </label>
+                        </td>
+                        <td style="text-align: center;">
+                           <span>{{ record["no"] }}</span>
+                        </td>
+                        <td style="text-align: center;">
+                           <span>{{record.ma }}</span>
+                        </td>
+                        <td>
+                           <span>{{ record.taiXe_HoTen }}</span>
+                        </td>
+                        <td style="text-align: center;">
+                           <span>{{ record.taiXe_HangBangLai }}</span>
+                        </td>
+                        <td [style.float] = "'right'" [style.padding-right.px]="'40'">
+                           <span>{{
+                               record.hopDong_MucLuong | currency: "VND":true
+                            }}</span>
+                        </td>
+                        <td style="text-align: center;">
+                           <span>{{
+                               record.taiXe_TrangThaiLamViec == "D"
+                                  ? "Làm việc"
+                                  : "Nghỉ"
+                            }}</span>
+                        </td>
+                     </tr>
+                  </ng-template>
+               </p-table>
+               <div class="primeng-no-data" *ngIf="primengTableHelper.totalRecordsCount == 0">
+                  {{ l("NoData") }}
+               </div>
+            </div>
+            <!--<Primeng-TurboTable-End>-->
+         </div>
+      </div>
+   </div>
+
+   <p-dialog styleClass="dialog-width" header="THÔNG BÁO" [(visible)]="saveDialog" [style]="{ width: '300px' }"
+      [baseZIndex]="10000">
+      Xác nhận thêm tài xế?
+      <p-footer>
+         <button type="button" style="background-color: #5867dd; margin-right: 20px;" pButton
+            (click)="saveDialog = false; insert()" label="Thêm"></button>
+         <button type="button" pButton (click)="saveDialog = false" label="Hủy" class="ui-button-secondary"></button>
+      </p-footer>
+   </p-dialog>
+</div>

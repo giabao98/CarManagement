@@ -1,0 +1,214 @@
+<div [@routerTransition]>
+    <div class="m-content">
+        <div class="m-portlet m-portlet__header m-portlet-mobile">
+            <div class="m-portlet__nav">
+                <ul>
+                    <li>
+                        <a routerLink="/app/admin/schedule-cars-add"
+                            *ngIf="permission.isGranted('Pages.Group4.Group4LichTrinh.Insert')">
+                            <i class="flaticon-add"></i>
+                            Thêm mới
+                        </a>
+                    </li>
+                    <li>
+                        <a [class.disabled]="!curScheduleId"
+                            *ngIf="permission.isGranted('Pages.Group4.Group4LichTrinh.Update')"
+                            [routerLink]="['/app/admin/schedule-cars-edit', curScheduleId]">
+                            <i class="flaticon-edit"></i> Chỉnh sửa
+                        </a>
+                    </li>
+                    <li>
+                        <span (click)="search()" *ngIf="permission.isGranted('Pages.Group4.Group4LichTrinh.Search')">
+                            <i class="flaticon-search"></i>
+                            Tìm kiếm
+                        </span>
+                    </li>
+                    <li>
+                        <a [class.disabled]="!curScheduleId"
+                            *ngIf="permission.isGranted('Pages.Group4.Group4LichTrinh.SearchById')"
+                            [routerLink]="['/app/admin/schedule-cars-edit', curScheduleId]"
+                            [queryParams]="{ isReadOnly: true }">
+                            <i class="fa fa-eye"></i> Xem chi tiết
+                        </a>
+                    </li>
+                    <li>
+                        <span (click)="delete()" [class.disabled]="!curScheduleId"
+                            *ngIf="permission.isGranted('Pages.Group4.Group4LichTrinh.Delete')">
+                            <i class="fa fa-trash"></i> Xóa
+                        </span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="m-subheader pd-0">
+            <div class="d-flex align-items-center">
+                <div class="mr-auto col-xs-6">
+                    <span class="m-section__sub m-section__sub--separator">
+                        {{l("Trang chủ")}}
+                    </span>
+                    <span class="m-section__sub m-section__sub--separator active">
+                        <a routerLink="/app/admin/schedule-cars">{{l("Quản lý lịch trình")}} {{currentUserName}}</a>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="m-content schedule-content">
+        <div class="m-portlet m-portlet-mobile">
+            <div class="m-portlet__body">
+                <form #filterForm="ngForm">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label for="lichTrinh_DiemDi">Điểm đi</label>
+                            <div class="form-group">
+                                <p-dropdown id="startDistance" filterBy="label,value.name" styleClass="w-100"
+                                    (onChange)="onSelectStartDestination()" [options]="startDestinationOptions"
+                                    [(ngModel)]="startDestination" name="startDestination" filter="true">
+                                </p-dropdown>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="lichTrinh_DiemDen">Điểm đến</label>
+                            <div class="form-group">
+                                <p-dropdown id="endDestination" filterBy="label,value.name" styleClass="w-100"
+                                    (onChange)="onSelectEndDestination()" [options]="endDestinationOptions"
+                                    styleClass="w-100" [(ngModel)]="endDestination" name="endDestination" filter="true">
+                                </p-dropdown>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="lichTrinh_TaiXe">Xe</label>
+                            <div class="form-group">
+                                <p-dropdown [options]="carOpts" styleClass="w-100" [(ngModel)]="carOpt"
+                                    placeholder="Chọn xe" name="llichTrinh_MaXe" optionLabel="label"
+                                    (onChange)="onSelectCar($event)" filter="true">
+                                </p-dropdown>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label for="lichTrinh_ThoiGianDi">Thời gian đi</label>
+                            <div class="form-group">
+                                <p-calendar inputStyleClass="w-100" styleClass="w-100" showTime="true" hourFormat="24"
+                                    name="lichTrinh_ThoiGianDi" [locale]="locale_vi"
+                                    [(ngModel)]="scheduleInput.lichTrinh_NgayDi" [minDate]="minStartDate"
+                                    [readonlyInput]="true" (onSelect)="handleStartDateSelect($event)">
+                                </p-calendar>
+                                <p class="text-danger">{{scheduleStartDateError ? scheduleStartDateError.message : ""}}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="lichTrinh_ThoiGianDen">Thời gian đến</label>
+                            <div class="form-group">
+                                <p-calendar inputStyleClass="w-100" styleClass="w-100" showTime="true" hourFormat="24"
+                                    name="lichTrinh_ThoiGianDen" [locale]="locale_vi" dateFormat="dd/mm/yy"
+                                    [(ngModel)]="scheduleInput.lichTrinh_NgayDen" [minDate]="minEndDate"
+                                    [readonlyInput]="true" (onSelect)="handleEndDateSelect($event)">
+                                </p-calendar>
+                                <p class="text-danger">{{scheduleEndDateError ? scheduleEndDateError.message : ""}}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="lichTrinh_TrangThai">Trạng thái</label>
+                            <div class="form-group">
+                                <div class="form-group">
+                                    <p-dropdown [options]="scheduleStatusOpts" styleClass="w-100"
+                                        [(ngModel)]="scheduleOpt" placeholder="Trạng thái" name="lichTrinh_TrangThai"
+                                        optionLabel="label" [showClear]="true" required
+                                        (onChange)="onSelectScheduleStatus($event)">
+                                    </p-dropdown>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="submit" hidden [disabled]="!filterForm.form.valid"></button>
+                </form>
+                <div class="row align-items-center">
+                    <!--<Primeng-TurboTable-Start>-->
+                    <div class="primeng-datatable-container">
+                        <p-table #dataTable [value]="primengTableHelper.records"
+                            [paginator]="primengTableHelper.totalRecordsCount === 0 ? false : true"
+                            [rows]="primengTableHelper.defaultRecordsCountPerPage"
+                            [rowsPerPageOptions]="primengTableHelper.predefinedRecordsCountPerPage"
+                            totalRecords="totalRecords" pageLinks="3">
+                            <ng-template pTemplate="header">
+                                <tr>
+                                    <th>
+                                        Checkbox
+                                    </th>
+                                    <th pSortableColumn="no">
+                                        STT
+                                        <p-sortIcon field="no"></p-sortIcon>
+                                    </th>
+                                    <th>
+                                        Hành trình
+                                    </th>
+                                    <th pSortableColumn="lichTrinh_NgayDi">
+                                        Bắt đầu
+                                        <p-sortIcon field="lichTrinh_NgayDi"></p-sortIcon>
+                                    </th>
+                                    <th pSortableColumn="lichTrinh_NgayDen">
+                                        Kết thúc
+                                        <p-sortIcon field="lichTrinh_NgayDen"></p-sortIcon>
+                                    </th>
+                                    <th class="text-right" pSortableColumn="tuyenchay_SoKm">
+                                        Khoảng cách
+                                        <p-sortIcon field="tuyenchay_SoKm"></p-sortIcon>
+                                    </th>
+                                    <th pSortableColumn="xe_BienSo">
+                                        Biển số xe
+                                        <p-sortIcon field="xe_BienSo"></p-sortIcon>
+                                    </th>
+                                    <th pSortableColumn="lichTrinh_TrangThaiChuyen">
+                                        Trạng thái
+                                        <p-sortIcon field="lichTrinh_TrangThaiChuyen"></p-sortIcon>
+                                    </th>
+                                </tr>
+                            </ng-template>
+
+                            <ng-template pTemplate="body" let-record="$implicit">
+                                <tr>
+                                    <td>
+                                        <label class="m-radio" for="Theme_Default-{{record.ma}}">
+                                            <input id="Theme_Default-{{record.ma}}" name="Theme"
+                                                [(ngModel)]="curScheduleId" value="{{record.ma}}" type="radio">
+                                            <span></span>
+                                        </label>
+                                    </td>
+                                    <td>
+                                        <span>{{record['no']}}</span>
+                                    </td>
+                                    <td>
+                                        <span>{{record.tuyenChay_DiemDi}}-{{record.tuyenChay_DiemDen}}</span>
+                                    </td>
+                                    <td>
+                                        <span>{{record.lichTrinh_NgayDi  | date: 'dd/mm/yyyy HH:mm:ss'}}</span>
+                                    </td>
+                                    <td>
+                                        <span>{{  record.lichTrinh_NgayDen  | date: 'dd/mm/yyyy HH:mm:ss'}}</span>
+                                    </td>
+                                    <td class="text-right">
+                                        <span>{{record.tuyenchay_SoKm}} km</span>
+                                    </td>
+                                    <td>
+                                        <span>{{record.xe_BienSo}}</span>
+                                    </td>
+                                    <td>
+                                        <span>{{record.lichTrinh_TrangThaiChuyen === "C" ? "Chưa nhận" : record.lichTrinh_TrangThaiChuyen === "D" ? "Đang di chuyển":  record.lichTrinh_TrangThaiChuyen === "K" ?  "Kết thúc": "Huỷ" }}</span>
+                                    </td>
+                                </tr>
+                            </ng-template>
+                        </p-table>
+                        <div class="primeng-no-data" *ngIf="primengTableHelper.totalRecordsCount == 0">
+                            {{l('NoData')}}
+                        </div>
+                    </div>
+                    <!--<Primeng-TurboTable-End>-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

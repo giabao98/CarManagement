@@ -1,0 +1,15 @@
+.Group-2 label {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+.Group-2.m-portlet.m-portlet-mobile {
+    margin-right: 15px;
+    margin-left: 15px;
+}
+.save-confirm{
+    margin: 0;
+    top: 50%;
+    left: 55%;
+    right: 45%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+}

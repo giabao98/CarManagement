@@ -1,0 +1,265 @@
+<div [@routerTransition]>
+   <div class="m-content">
+      <div class="m-portlet m-portlet__header m-portlet-mobile">
+         <div class="m-portlet__nav">
+            <ul>
+               <li>
+                  <a routerLink="/app/admin/material-add">
+                     <i class="flaticon-add"></i>
+                     Thêm mới
+                  </a>
+               </li>
+
+               <li>
+                  <a routerLink="/app/admin/material-del">
+                     <span>
+                        <i class="flaticon-calendar"></i>
+                        lịch sử thanh lý
+                     </span>
+                  </a>
+               </li>
+             
+            </ul>
+         </div>
+      </div>
+      <div class="m-subheader">
+         <div class="d-flex align-items-center">
+            <div class="mr-auto col-xs-6">
+               <span class="m-section__sub m-section__sub--separator">
+                  {{ l("Vật tư theo xe") }}
+               </span>
+               <span class="m-section__sub m-section__sub--separator active">
+                  <a routerLink="/app/admin/material">{{ l("Quản lý vật tư") }} {{ currentUserName }}</a>
+               </span>
+            </div>
+         </div>
+      </div>
+   </div>
+
+   <div class="group-2 m-portlet m-portlet-mobile">
+      <div class="m-portlet__body">
+         <form #filterForm="ngForm" (submit)="onChangeMaterial()">
+            <div class="row">
+               <div class="col-md-6">
+                  <label for="vatTu_TenVatTu">Tên vật tư</label>
+                  <div class="form-group">
+                     <p-autoComplete [(ngModel)]="material" name="material_name" [suggestions]="filteredMaterial"
+                        (completeMethod)="filterMaterial($event)" field="vatTu_Ten" [size]="40"
+                        (onSelect)="onChangeMaterial()" placeholder="Chọn" [dropdown]="false">
+                     </p-autoComplete>
+                  </div>
+               </div>
+
+               <div class="col-md-6">
+                  <label for="">Mã vật tư</label>
+                  <div class="form-group">
+                     <p-autoComplete [(ngModel)]="material" name="material" [suggestions]="filteredMaterial"
+                        (completeMethod)="filterMaterial($event)" field="ma" (onSelect)="onChangeMaterial()" [size]="20"
+                        placeholder="Chọn" [dropdown]="true">
+                     </p-autoComplete>
+                  </div>
+               </div>
+               <button type="submit" hidden [disabled]="!filterForm.form.valid"></button>
+            </div>
+         </form>
+
+         <hr />
+
+         <div style="
+              border: 1px solid rgba(0, 0, 0, 0.25);
+              padding-right: 25px;
+              padding-left: 25px;
+              padding-top: 5px;
+              padding-bottom: 5px;
+           ">
+            <form (submit)="carInputSubmit()">
+               <div class="row">
+                  <div class="col-md-2">
+                     <label for="xe_LoaiXe">Loại xe</label>
+                     <div class="form-group">
+                        <p-autoComplete [(ngModel)]="modelCarWithout" name="modelCar" [suggestions]="filteredModelCar"
+                           (completeMethod)="filterModelCar($event)" [size]="10" (onSelect)="onSelectCarType()"
+                           field="loaiXe_Ten" (onClear)="onClearCarType()" placeholder="Chọn" [dropdown]="true">
+                        </p-autoComplete>
+                     </div>
+                  </div>
+                  <div class="col-md-1"></div>
+                  <div class="col-md-3">
+                     <label for="xe_BienSo">Biển số xe</label>
+                     <div class="form-group">
+                        <input id="xe_BienSo" class="ui-inputtext ui-widget ui-state-default form-control" type="text"
+                           name="xe_BienSo" maxlength="20" [(ngModel)]="CarWithoutMI.xe_BienSo" />
+                     </div>
+                  </div>
+                  <button type="submit" hidden [disabled]="!filterForm.form.valid"></button>
+               </div>
+            </form>
+
+            <div style="padding: 10px 25px 25px 25px;">
+               <div class="row align-items-center">
+                  <!--<Primeng-TurboTable-Start>-->
+                  <div class="primeng-datatable-container">
+                     <p-table #dataTable1 [value]="carWithoutMaterial.records" [paginator]="
+                          carWithoutMaterial.totalRecordsCount === 0
+                             ? false
+                             : true
+                       " [rows]="5" [rowsPerPageOptions]="
+                          carWithoutMaterial.predefinedRecordsCountPerPage
+                       " totalRecords="totalRecords" pageLinks="3">
+                        <ng-template pTemplate="header">
+                           <tr>
+                              <th>
+                                 STT
+                              </th>
+                              <th>
+                                 Mã xe
+                              </th>
+                              <th>
+                                 Tên xe
+                              </th>
+                              <th>
+                                 loại xe
+                              </th>
+                              <th>
+                                 Biển số xe
+                              </th>
+                              <th>
+                                 Thao tác
+                              </th>
+                           </tr>
+                        </ng-template>
+
+                        <ng-template pTemplate="body" let-record="$implicit">
+                           <tr>
+                              <td style="text-align: center;">
+                                 <span>{{ record["no"] }}</span>
+                              </td>
+                              <td style="text-align: center;">
+                                 <span>{{ "TX00" + record.ma }}</span>
+                              </td>
+                              <td>
+                                 <span>{{ record.xe_Ten }}</span>
+                              </td>
+                              <td>
+                                 <span>{{ record.loaiXe_Ten }}</span>
+                              </td>
+                              <td style="text-align: center;">
+                                 <span>{{ record.xe_BienSo }}</span>
+                              </td>
+                              <td style="text-align: center;">
+                                 <a (click)="onClickAdd(record.ma)" style="cursor: pointer;">
+                                    <i class="pi pi-plus" style="font-size: 1em;"></i>
+                                 </a>
+                              </td>
+                           </tr>
+                        </ng-template>
+                     </p-table>
+                     <div class="primeng-no-data" *ngIf="carWithoutMaterial.totalRecordsCount == 0">
+                        {{ l("NoData") }}
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div class="row" style="padding: 10px;">
+            <h5>Danh sách xe sử dụng vật tư này:</h5>
+         </div>
+
+         <div style="
+              border: 1px solid rgba(0, 0, 0, 0.25);
+              padding-right: 25px;
+              padding-left: 25px;
+              padding-top: 5px;
+              padding-bottom: 5px;
+           ">
+            <form (submit)="carInputSubmitWith()">
+               <div class="row">
+                  <div class="col-md-2">
+                     <label for="xe_LoaiXeVatTu">Loại xe</label>
+                     <div class="form-group">
+                        <p-autoComplete [(ngModel)]="modelCarWith" name="modelCar" [suggestions]="filteredModelCar"
+                           (completeMethod)="filterModelCar($event)" [size]="10" (onSelect)="onSelectCarTypeWith()"
+                           field="loaiXe_Ten" (onClear)="onClearCarTypeWith()" placeholder="Chọn" [dropdown]="true">
+                        </p-autoComplete>
+                     </div>
+                  </div>
+                  <div class="col-md-1"></div>
+                  <div class="col-md-3">
+                     <label for="xe_BienSoVatTu">Biển số xe</label>
+                     <div class="form-group">
+                        <input id="xe_BienSoVatTu" class="ui-inputtext ui-widget ui-state-default form-control"
+                           type="text" name="xe_BienSoVatTu" maxlength="20" [(ngModel)]="CarWithMI.xe_BienSo" />
+                     </div>
+                  </div>
+                  <button type="submit" hidden [disabled]="!filterForm.form.valid"></button>
+               </div>
+            </form>
+            <div style="padding: 10px 25px 25px 25px;">
+               <div class="row align-items-center">
+                  <!--<Primeng-TurboTable-Start>-->
+                  <div class="primeng-datatable-container">
+                     <p-table #dataTable2 [value]="carWithMaterial.records" [paginator]="
+                          carWithMaterial.totalRecordsCount === 0
+                             ? false
+                             : true
+                       " [rows]="carWithMaterial.defaultRecordsCountPerPage" [rowsPerPageOptions]="
+                          carWithMaterial.predefinedRecordsCountPerPage
+                       " totalRecords="totalRecords" pageLinks="3">
+                        <ng-template pTemplate="header">
+                           <tr>
+                              <th>
+                                 STT
+                              </th>
+                              <th>
+                                 Mã xe
+                              </th>
+                              <th>
+                                 Tên xe
+                              </th>
+                              <th>
+                                 loại xe
+                              </th>
+                              <th>
+                                 Biển số xe
+                              </th>
+                              <th>
+                                 Thao tác
+                              </th>
+                           </tr>
+                        </ng-template>
+
+                        <ng-template pTemplate="body" let-record="$implicit">
+                           <tr>
+                              <td style="text-align: center;">
+                                 <span>{{ record["no"] }}</span>
+                              </td>
+                              <td style="text-align: center;">
+                                 <span>{{ "TX00" + record.ma }}</span>
+                              </td>
+                              <td>
+                                 <span>{{ record.xe_Ten }}</span>
+                              </td>
+                              <td>
+                                 <span>{{ record.loaiXe_Ten }}</span>
+                              </td>
+                              <td style="text-align: center;">
+                                 <span>{{ record.xe_BienSo }}</span>
+                              </td>
+                              <td style="text-align: center;">
+                                 <span (click)="onClickDel(record.ma)" style="cursor: pointer;">
+                                    <i class="pi pi-times" style="font-size: 1em;"></i>
+                                 </span>
+                              </td>
+                           </tr>
+                        </ng-template>
+                     </p-table>
+                     <div class="primeng-no-data" *ngIf="carWithMaterial.totalRecordsCount == 0">
+                        {{ l("NoData") }}
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>

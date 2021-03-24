@@ -1,0 +1,84 @@
+<div [@routerTransition]>
+    <form #roadAddForm="ngForm" (submit)="updateRoad($event)">
+        <div class="m-content">
+            <div class="m-portlet m-portlet__header m-portlet-mobile">
+                <div class="m-portlet__nav">
+                    <ul>
+                        <li>
+                            <button type="submit" *ngIf="permission.isGranted('Pages.Group4.Group4TuyenChay.Update')"
+                                class="roadsSaveBtn" [class.disabled]="!roadAddForm.form.valid">
+                                <i class="fa fa-save"></i>Lưu
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="m-subheader pd-0">
+                <div class="d-flex align-items-center">
+                    <div class="mr-auto col-xs-6">
+                        <span class="m-section__sub m-section__sub--separator">
+                            {{l("Trang chủ")}}
+                        </span>
+                        <span class="m-section__sub m-section__sub--separator active">
+                            <a routerLink="/app/admin/road">{{l("Quản lý tuyến chạy")}}</a>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="m-content road-content">
+            <div class="m-portlet m-portlet-mobile">
+                <div class="m-portlet__body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group m-form__group">
+                                <label for="startDestinationInput">Điểm đi</label>
+                                <input id="startDestinationInput" #startDestinationInput="ngModel"
+                                    [(ngModel)]="roadDTO.tuyenChay_DiemDi" class="form-control" type="text"
+                                    autocomplete="off" name="startDestination" maxlength="256" required>
+                                <validation-messages [formCtrl]="startDestinationInput">
+                                    <!-- [errorDefs]="[{pKeyFilter: l('Vui lòng không nhập số hoặc các ký tự đặc biệt')}]" -->
+                                </validation-messages>
+                            </div>
+                            <div class="form-group m-form__group">
+                                <label for="endDestinationInput">Điểm đến</label>
+                                <input id="endDestinationInput" #endDestinationInput="ngModel"
+                                    [(ngModel)]="roadDTO.tuyenChay_DiemDen" class="form-control" type="text"
+                                    autocomplete="off" name="endDestination" maxlength="256" required>
+                                <validation-messages [formCtrl]="endDestinationInput">
+                                </validation-messages>
+                            </div>
+                            <div class="form-group m-form__group">
+                                <label for="roadDistanceInput">Số km</label>
+                                <input id="roadDistanceInput" #roadDistanceInput="ngModel"
+                                    [(ngModel)]="roadDTO.tuyenChay_SoKm" class="form-control" type="text"
+                                    autocomplete="off" name="roadDistance" maxlength="256" required
+                                    pattern="^[+-]?([0-9]+([.][0-9]*)?|[.][0-9]+)$"
+                                     />
+                                <p class="m-form__help">{{l(" Số km phải là số và có thể nhập dấu '.' (Ví dụ: 200 hoặc 320.3)")}}
+                                </p>
+                                <validation-messages [formCtrl]="roadDistanceInput"
+                                    [errorDefs]="[{pattern: l('Vui lòng không nhập các ký tự đặc biệt')}]">
+                                </validation-messages>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group m-form__group">
+                                <label for="reasonInput">Mục đích</label>
+                                <div class="form-group m-form__group">
+                                    <textarea id="reasonInput" #reasonInput="ngModel" name="reason" pInputTextarea
+                                        [(ngModel)]="roadDTO.tuyenChay_MucDich" required></textarea>
+                                    <validation-messages [formCtrl]="reasonInput">
+                                        ></validation-messages>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" hidden [disabled]="!roadAddForm.form.valid"
+                        *ngIf="isGranted('Pages.Group4.Group4TuyenChay.Update')"></button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

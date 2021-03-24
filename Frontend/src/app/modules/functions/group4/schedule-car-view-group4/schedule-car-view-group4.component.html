@@ -1,0 +1,130 @@
+<div [@routerTransition]>
+    <form #scheduleAddForm="ngForm" (submit)="updateSchedule($event)">
+        <div class="m-content">
+            <div class="m-portlet m-portlet__header m-portlet-mobile">
+                <div class="m-portlet__nav">
+                    <ul>
+                        <li>
+                            <button type="submit" class="schedule_btn" [class.disabled]="!scheduleAddForm.form.valid">
+                                <i class="fa fa-save"></i>Lưu
+                            </button>
+                        </li>
+                        <!-- *ngIf="isGranted('Pages.Group4.Group4LichTrinh.Insert')" -->
+                    </ul>
+                </div>
+            </div>
+            <div class="m-subheader pd-0">
+                <div class="d-flex align-items-center">
+                    <div class="mr-auto col-xs-6">
+                        <span class="m-section__sub m-section__sub--separator">
+                            {{l("Trang chủ")}}
+                        </span>
+                        <span class="m-section__sub m-section__sub--separator active">
+                            <a routerLink="/app/admin/schedule-cars">{{l("Quản lý lịch trình")}} {{currentUserName}}</a>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="m-content schedule-content">
+            <div class="m-portlet m-portlet-mobile">
+                <div class="m-portlet__body">
+                    <div class="row">
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label for="tuyenChay">Tuyến chạy</label>
+                                <div class="form-group">
+                                    <p-dropdown disabled [options]="routeOpts" styleClass="w-100" [(ngModel)]="routeOpt"
+                                        placeholder="Chọn tuyến chạy" name="tuyenChay" optionLabel="label"
+                                        (onChange)="handleRouteSelect($event)" filter="true">
+                                    </p-dropdown>
+                                    <p class="text-danger">
+                                        {{routeError ? routeError.message : ""}}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="lichTrinh_MaXe">Xe</label>
+                            <div class="form-group">
+                                <p-dropdown disabled [options]="carOpts" styleClass="w-100" [(ngModel)]="carOpt"
+                                    placeholder="Chọn xe" name="llichTrinh_MaXe" optionLabel="label"
+                                    (onChange)="handleCarSelect($event)" filter="true">
+                                </p-dropdown>
+                                <p class="text-danger">
+                                    {{carError ? carError.message : ""}}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="lichTrinh_TrangThai">Trạng thái</label>
+                            <div class="form-group">
+                                <div class="form-group">
+                                    <p-dropdown disabled  [options]="scheduleStatusOpts" styleClass="w-100"
+                                        [(ngModel)]="scheduleStatusOpt" placeholder="Trạng thái"
+                                        name="lichTrinh_TrangThai" optionLabel="name" [showClear]="true" required>
+                                    </p-dropdown>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label for="tuyenChay_DiemDi">Điểm đi</label>
+                            <div class="form-group">
+                                <input id="tuyenChay_DiemDi" [(ngModel)]="routeOpt.tuyenChay_DiemDi"
+                                    class="form-control schedule-form-control " type="text" name="tuyenChay_DiemDi"
+                                    disabled>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="tuyenChay_DiemDen">Điểm đến</label>
+                            <div class="form-group">
+                                <input id="tuyenChay_DiemDen" [(ngModel)]="routeOpt.tuyenChay_DiemDen"
+                                    class="form-control schedule-form-control" type="text" name="tuyenChay_DiemDen"
+                                    disabled>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="tuyenChay_SoKm">Số Km</label>
+                            <div class="form-group">
+                                <input id="tuyenChay_SoKm" [(ngModel)]="routeOpt.tuyenChay_SoKm"
+                                    class="form-control schedule-form-control" type="text" name="tuyenChay_SoKm"
+                                    disabled>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label for="lichTrinh_ThoiGianDi">Thời gian đi</label>
+                            <div class="form-group">
+                                <p-calendar disabled inputStyleClass="w-100" styleClass="w-100" showTime="true" hourFormat="24"
+                                    name="lichTrinh_ThoiGianDi" [locale]="locale_vi" dateFormat="dd/mm/yy"
+                                    [(ngModel)]="temptStartDate" [minDate]="minStartDate" [readonlyInput]="true"
+                                    (onSelect)="handleStartDateSelect($event)" >
+                                </p-calendar>
+                                <p class="text-danger">{{scheduleStartDateError ? scheduleStartDateError.message : ""}}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="lichTrinh_ThoiGianDen">Thời gian đến</label>
+                            <div class="form-group">
+                                <p-calendar disabled inputStyleClass="w-100" styleClass="w-100" showTime="true" hourFormat="24"
+                                    name="lichTrinh_ThoiGianDen" [locale]="locale_vi" dateFormat="dd/mm/yy"
+                                    [(ngModel)]="temptEndDate" [minDate]="minEndDate" required [readonlyInput]="true"
+                                    (onSelect)="handleEndDateSelect($event)">
+                                </p-calendar>
+                                <p class="text-danger">
+                                    {{scheduleEndDateError ? scheduleEndDateError.message : ""}}
+                                </p>
+                            </div>
+                        </div>
+
+                    </div>
+                    <button type="submit" hidden [disabled]="!scheduleAddForm.form.valid"></button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

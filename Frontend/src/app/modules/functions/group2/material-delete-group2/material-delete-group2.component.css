@@ -1,0 +1,45 @@
+.m-portlet__body {
+    margin-right: 15px;
+    margin-left: 15px;
+}
+
+.group-2.m-portlet.m-portlet-mobile {
+    margin-right: 15px;
+    margin-left: 15px;
+}
+
+.table-checkbox {
+    width: 50px !important;
+}
+
+.m-radio {
+    padding-top: 5px !important;
+}
+
+.th-STT {
+    width: 80px;
+}
+.th-MaTaiXe {
+    width: 140px;
+}
+.th-TenTaiXe {
+    width: 280px;
+}
+.th-MucLuong {
+    width: 200px !important;
+}
+.th-HangBangLai {
+    width: 120px;
+}
+.th-TrangThai {
+    width: 150px;
+}
+th {
+    text-align: center !important;
+}
+.td-HangBangLai {
+    text-align: center !important;
+}
+.swal-modal {
+    width: 290px !important;
+}

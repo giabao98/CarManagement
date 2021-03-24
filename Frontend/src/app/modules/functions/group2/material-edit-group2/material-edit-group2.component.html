@@ -1,0 +1,152 @@
+<div [@routerTransition]>
+  <div class="m-content">
+     <div class="m-portlet m-portlet__header m-portlet-mobile">
+        <div class="m-portlet__nav">
+           <ul>
+              <li>
+                 <a routerLink="/app/admin/material-add">
+                    <i class="flaticon-add"></i>
+                    Thêm mới
+                 </a>
+              </li>
+              
+             <li>
+                 <a routerLink="/app/admin/material-del">
+                     <span>
+                         <i class="flaticon-calendar"></i>
+                         lịch sử thanh lý
+                     </span>
+                 </a>
+             </li>
+             <li>
+                 <a routerLink="/app/admin/material-car">
+                     <span>
+                         <i class="flaticon-info"></i>
+                         Vật tư theo xe
+                     </span>
+                 </a>
+             </li>
+           </ul>
+        </div>
+     </div>
+     <div class="m-subheader">
+        <div class="d-flex align-items-center">
+           <div class="mr-auto col-xs-6">
+              <span class="m-section__sub m-section__sub--separator">
+                 {{ l("Chỉnh sửa vật tư") }}
+              </span>
+              <span class="m-section__sub m-section__sub--separator active">
+                 <a routerLink="/app/admin/material">{{ l("Quản lý vật tư") }} {{ currentUserName }}</a>
+              </span>
+           </div>
+        </div>
+     </div>
+  </div>
+
+  <div class="Group-2 m-portlet m-portlet-mobile">
+     <div class="m-portlet__body">
+        <div class="add-form">
+           <form>
+              <div class="row">
+                 <div class="col-md-3"></div>
+                 <div class="col-md-6">
+                    <label for="">Tên vật tư</label>
+                    <div class="form-group">
+                       <input id="name"
+                          class="ui-inputtext ui-widget ui-state-default form-control" name="vatTu_Ten"
+                          [(ngModel)]="materialSearch.vatTu_Ten" type="text" maxlength="50"  />
+                    </div>
+                 </div>               
+              </div>
+
+              <div class="row">
+                 <div class="col-md-3"></div>
+                 <div class="col-md-6">
+                    <label for="">Số lượng</label>
+                    <div class="form-group">
+                       <input  id="amount"
+                          class="ui-inputtext ui-widget ui-state-default form-control" type="number"
+                          name="vatTu_SoLuong" [(ngModel)]="materialSearch.vatTu_SoLuong" step="10" (ngModelChange)="changePrice()"/>
+                    </div>
+                 </div>
+              </div>
+
+              <div class="row">
+                 <div class="col-md-3"></div>
+                 <div class="col-md-3">
+                    <label for="">Đơn giá</label>
+                    <div class="form-group">
+                       <input  id="price"
+                          class="ui-inputtext ui-widget ui-state-default form-control" type="number"
+                          name="vatTu_DonGia" [(ngModel)]="materialSearch.vatTu_DonGia" step="100000" (ngModelChange)="changePrice()" />
+                    </div>
+                 </div>
+                 <div class="col-md-3">
+                    <label for="">Tổng trị giá</label>
+                    <div class="form-group">
+                       <input  id="sub"
+                          class="ui-inputtext ui-widget ui-state-default form-control" type="number" name="TongTriGia"
+                          [(ngModel)]="TongTriGia" step="100000" disabled="true" />
+                    </div>
+                 </div>
+                 
+              </div>
+              <div class="row">
+                 <div class="col-md-3"></div>
+                 <div class="col-md-6">
+                    <label>Mô tả</label>
+                    <div class="form-group">
+                       <textarea name="vatTu_MoTa" rows="4" class="form-control" [(ngModel)]="materialSearch.vatTu_MoTa"></textarea>
+                    </div>
+                 </div>
+              </div>
+              <div class="row">
+              </div>
+
+           </form>
+
+           <div class="row">
+              <div class="col-md-4"></div>
+              <div class="container">
+                 <div class="col-md-4 save-confirm" style="margin-top: 25px;">
+                    <form class="m-content" #roleForm="ngForm" novalidate (ngSubmit)="finalConfirm()"
+                       autocomplete="off">
+                       <div class="m-portlet__header m-portlet-mobile">
+                          <div class="m-portlet__nav">
+                             <ul>
+                                <li>
+                                   <a style="cursor: pointer;" (click)="cancelConfirm()"><i class="fa fa-times"></i>
+                                      Hủy</a>
+                                </li>
+                                <li>
+                                   <a style="cursor: pointer;" (click)="finalConfirm()"><i class="fa fa-check"></i>
+                                      Lưu</a>
+                                </li>
+                             </ul>
+                          </div>
+                       </div>
+                    </form>
+                 </div>
+              </div>
+              <div class="col-md-4"></div>
+           </div>
+        </div>
+
+        <div class="row align-items-center">
+           <!--<Primeng-TurboTable-Start>-->
+
+           <!--<Primeng-TurboTable-End>-->
+        </div>
+     </div>
+  </div>
+
+  <p-dialog styleClass="dialog-width" header="THÔNG BÁO" [(visible)]="saveDialog" [style]="{ width: '300px' }"
+     [baseZIndex]="10000">
+     Xác nhận chỉnh sửa vật tư?
+     <p-footer>
+        <button type="button" style="background-color: #5867dd; margin-right: 20px;" pButton
+           (click)="saveDialog = false; edit()" label="Chỉnh sửa"></button>
+        <button type="button" pButton (click)="saveDialog = false" label="Hủy" class="ui-button-secondary"></button>
+     </p-footer>
+  </p-dialog>
+</div>

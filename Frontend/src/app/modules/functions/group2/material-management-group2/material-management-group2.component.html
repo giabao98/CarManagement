@@ -1,0 +1,151 @@
+<div [@routerTransition]>
+    <div class="m-content">
+        <div class="m-portlet m-portlet__header m-portlet-mobile">
+            <div class="m-portlet__nav">
+                <ul>
+                    <li>
+                        <a routerLink="/app/admin/material-add">
+                            <i class="flaticon-add"></i>
+                            Thêm mới
+                        </a>
+                    </li>
+                    <li>
+                        <a [class.disabled]="!materialId" [routerLink]="['/app/admin/material-edit', {id: materialId}]">
+                            <i class="flaticon-edit"></i> Chỉnh sửa
+                        </a>
+                    </li>
+
+                    <li>
+                        <a [class.disabled]="!materialId" [routerLink]="['/app/admin/material-sub', {id: materialId}]">
+                            <i class="flaticon-edit"></i>
+                            Thanh lý
+                        </a>
+                    </li>
+                    <li>
+                        <a routerLink="/app/admin/material-del">
+                            <span>
+                                <i class="flaticon-calendar"></i>
+                                <!--Khỏi set , huy sẽ set sau-->
+                                lịch sử thanh lý
+                            </span>
+                        </a>
+                    </li>
+                    <li>
+                        <a routerLink="/app/admin/material-car">
+                            <span>
+                                <i class="flaticon-info"></i>
+                                <!--Khỏi set , huy sẽ set sau-->
+                                Vật tư theo xe
+                            </span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="m-subheader">
+            <div class="d-flex align-items-center">
+                <div class="mr-auto col-xs-6">
+                    <span class="m-section__sub m-section__sub--separator">
+                        {{ l("Trang chủ") }}
+                    </span>
+                    <span class="m-section__sub m-section__sub--separator active">
+                        <a routerLink="/app/admin/material">{{ l("Quản lý vật tư") }} {{ currentUserName }}</a>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="m-portlet__body">
+        <div class="w-100">
+            <p-multiSelect (onChange)="changeFormSearch($event)" [options]="searchLists" [(ngModel)]="searchSelected">
+            </p-multiSelect>
+        </div>
+
+        <form class="row mt-3 mb-3" (submit)="onChangeSearch()">
+            <ng-container *ngFor="let item of searchListForm">
+                <div class="form-group col-4" *ngIf="item.check">
+                    <label [for]="item.label">{{ item.label }}</label>
+                    <input type="text" class="form-control" [id]="item.label" [(ngModel)]="materialSearch[item.attr]"
+                        [name]="item.name">
+                </div>
+            </ng-container>
+            <button type="submit" style="display:none">hidden submit</button>
+        </form>
+    </div>
+    <div class="Group-2 m-portlet m-portlet-mobile">
+        <div class="m-portlet__body">
+            <div class="row align-items-center">
+                <!--<Primeng-TurboTable-Start>-->
+                <div class="primeng-datatable-container">
+                    <p-table #dataTable [value]="primengTableHelper.records" [paginator]="
+            primengTableHelper.totalRecordsCount === 0 ? false : true
+          " [rows]="primengTableHelper.defaultRecordsCountPerPage" [rowsPerPageOptions]="
+            primengTableHelper.predefinedRecordsCountPerPage
+          " totalRecords="totalRecords" pageLinks="3">
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th class="table-checkbox"></th>
+                                <th style="text-align: center;">
+                                    STT
+                                </th>
+                                <th style="text-align: center;">
+                                    Tên vật tư
+                                </th>
+                                <th style="text-align: center;">
+                                    Số lượng
+                                </th>
+                                <th style="text-align: center;">
+                                    Mô tả
+                                </th>
+                                <th style="text-align: center;">
+                                    Tổng trị giá
+                                </th>
+                                <th style="text-align: center;">
+                                    Ngày thêm vào
+                                </th>
+                            </tr>
+                        </ng-template>
+
+                        <ng-template pTemplate="body" let-record="$implicit">
+                            <tr>
+                                <td>
+                                    <label class="m-radio" for="Theme_Default-{{ record.ma }}">
+                                        <input id="Theme_Default-{{ record.ma }}" name="Theme" [(ngModel)]="materialId"
+                                            value="{{ record.ma }}" type="radio" />
+                                        <span></span>
+                                    </label>
+                                </td>
+                                <td style="text-align: center;">
+                                    <span>{{ record["no"] }}</span>
+                                </td>
+                                <td class="td-TenVatTu">
+                                    <span>{{ record.vatTu_Ten }}</span>
+                                </td>
+                                <td style="text-align: center;">
+                                    <span>{{ record.vatTu_SoLuong }}</span>
+                                </td>
+                                <td class="td-MoTa">
+                                    <span>{{ record.vatTu_MoTa }}</span>
+                                </td>
+
+                                <td style="text-align: center;">
+                                    <span [style.float]="'right'" [style.padding-right.px]="'40'">{{
+                  record.vatTu_TongGia | currency: "VND":true  
+                 }}</span>
+                                </td>
+                                <td style="text-align: center;">
+                                    <span>{{
+                  toDate(record.vatTu_NgayTao) 
+                 }}</span>
+                                </td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                    <div class="primeng-no-data" *ngIf="primengTableHelper.totalRecordsCount == 0">
+                        {{ l("NoData") }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

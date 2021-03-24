@@ -1,0 +1,165 @@
+<div [@routerTransition]>
+    <div class="m-content">
+        <div class="m-portlet m-portlet__header m-portlet-mobile">
+            <div class="m-portlet__nav">
+                <ul>
+                    <li>
+                        <a routerLink="/app/admin/material-add">
+                            <i class="flaticon-add"></i>
+                            Thêm mới
+                        </a>
+                    </li>
+                    
+                    <li>
+                        <a routerLink="/app/admin/material-del">
+                            <span>
+                                <i class="flaticon-calendar"></i>                       
+                                lịch sử thanh lý
+                            </span>
+                        </a>
+                    </li>
+                    <li>
+                        <a routerLink="/app/admin/material-car">
+                            <span>
+                                <i class="flaticon-info"></i>         
+                                Vật tư theo xe
+                            </span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="m-subheader">
+            <div class="d-flex align-items-center">
+                <div class="mr-auto col-xs-6">
+                    <span class="m-section__sub m-section__sub--separator">
+                        {{ l("Thanh lý") }}
+                    </span>
+                    <span class="m-section__sub m-section__sub--separator active">
+                        <a>{{ l("Thanh lý vật tư") }} {{ currentUserName }}</a>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="Group-2 m-portlet m-portlet-mobile">
+        <div class="m-portlet__body">
+            <form #filterForm="ngForm" (submit)="thanhLy()">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label for="vatTu_Ten">Tên vật tư</label>
+                        <div class="form-group">
+                            <input id="vatTu_Ten" class="ui-inputtext ui-widget ui-state-default form-control"
+                                type="text" name="vatTu_Ten" maxlength="20" [(ngModel)]="materialSearch.vatTu_Ten" disabled>
+                        </div>
+
+                        <label> Đơn giá </label>
+                        <div class="form-group">
+                            <input name="vatTu_DonGia" id="vatTu_DonGia" class="ui-inputtext ui-widget ui-state-default form-control" type="text"   
+                                 disabled [(ngModel)]="materialSearch.vatTu_DonGia">
+                        </div>
+
+                        <label> Số lượng </label>
+                        <div class="form-group">
+                            <input name="vatTu_SoLuong" id="material-sub" class="ui-inputtext ui-widget ui-state-default form-control"
+                                 disabled [(ngModel)]="materialSearch.vatTu_SoLuong" type="text"   >
+                        </div>
+
+                        <label> Tổng trị giá </label>
+                        <div class="form-group">
+                            <input name="vatTu_TongTriGia" id="TongTriGia" class="ui-inputtext ui-widget ui-state-default form-control"
+                                 disabled [(ngModel)]="TongTriGia" type="text"   >
+                        </div>
+
+                        <label>Mô tả</label>
+                        <textarea name="vatTu_MoTa" class="ui-inputtext ui-widget ui-state-default form-control" type="textarea" disabled [(ngModel)]="materialSearch.vatTu_MoTa">
+                      </textarea>
+                    </div>
+
+
+                    <div class="col-md-6">
+                        <label>Lý do thanh lý</label>
+                        <textarea name="thanhLyVatTu_LyDo" class="ui-inputtext ui-widget ui-state-default form-control" type="textarea" rows="6"
+                        [(ngModel)]="materialSub.thanhLyVatTu_LyDo"
+                        ></textarea>
+
+                        <p></p>
+
+                        <div class="custom-control custom-radio custom-control-inline">
+                            <input type="radio" id="customRadioInline1" name="customRadioInline1" checked="true"
+                                class="custom-control-input" (click)="confirmAll()">
+
+                            <label class="custom-control-label" for="customRadioInline1">Thanh lý toàn bộ?</label>
+                        </div>
+
+                        <div class="custom-control custom-radio custom-control-inline">
+                            <input type="radio" id="customRadioInline2" name="customRadioInline1"
+                                class="custom-control-input" (click)="confirmPart()">
+
+                            <label class="custom-control-label" for="customRadioInline2">Thanh lý một phần?</label>
+                        </div>
+
+                        <p></p>
+
+                        <label for="">Tổng giá trị thanh lý</label>
+                        <div class="form-group">
+                            <input name="thanhLyVatTu_SoTienThanhLy" class="ui-inputtext ui-widget ui-state-default form-control" type="number"
+                            [(ngModel)]="materialSub.thanhLyVatTu_SoTienThanhLy"
+                            >
+                        </div>
+
+                        <div *ngIf="!allOrPart">
+                            <label for="">Số lượng thanh lý</label>
+                            <div class="form-group">
+                                <input name="thanhLyVatTu_SoLuong" class="ui-inputtext ui-widget ui-state-default form-control" type="number"
+                                    step="100"
+                                    [(ngModel)]="materialSub.thanhLyVatTu_SoLuong"
+                                    >
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <p></p>
+
+            </form>
+            <div class="row">
+                <div class="col-md-4"></div>
+                <div class="container">
+                    <div class="col-md-4 save-confirm">
+                        <form class="m-content" #roleForm="ngForm" novalidate (ngSubmit)="finalConfirm()"
+                            autocomplete="off">
+                            <div class="m-portlet__header m-portlet-mobile">
+                                <div class="m-portlet__nav">
+                                    <ul>
+                                        <li>
+                                            <a style="cursor: pointer;" (click)="cancelConfirm()"><i
+                                                    class="fa fa-times"></i>
+                                                Hủy</a>
+                                        </li>
+                                        <li>
+                                            <a style="cursor: pointer;" (click)="finalConfirm()"><i
+                                                    class="fa fa-check"></i>
+                                                Lưu</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="col-md-4"></div>
+            </div>
+        </div>
+    </div>
+    <p-dialog styleClass="dialog-width" header="THÔNG BÁO" [(visible)]="saveDialog" [style]="{ width: '300px' }"
+      [baseZIndex]="10000">
+      Xác nhận thanh lý vật tư?
+      <p-footer>
+         <button type="button" style="background-color: #5867dd; margin-right: 20px;" pButton
+            (click)="saveDialog = false; sub()" label="Thanh lý"></button>
+         <button type="button" pButton (click)="saveDialog = false" label="Hủy" class="ui-button-secondary"></button>
+      </p-footer>
+   </p-dialog>
+</div>

@@ -1,0 +1,68 @@
+.m-portlet__body {
+    margin-right: 15px;
+    margin-left: 15px;
+}
+
+.Group-2.m-portlet.m-portlet-mobile {
+    margin-right: 15px;
+    margin-left: 15px;
+}
+
+.table-checkbox {
+    width: 50px !important;
+}
+
+.m-radio {
+    padding-top: 5px !important;
+}
+
+.th-STT {
+    width: 80px;
+}
+.th-MaTaiXe {
+    width: 140px;
+}
+.th-TenTaiXe {
+    width: 280px;
+}
+.th-MucLuong {
+    width: 200px !important;
+}
+.th-HangBangLai {
+    width: 120px;
+}
+.th-TrangThai {
+    width: 150px;
+}
+th {
+    text-align: center !important;
+}
+.td-HangBangLai {
+    text-align: center !important;
+}
+.swal-modal {
+    width: 290px !important;
+}
+.pd-0 {
+    padding: 0 !important;
+}
+
+tr.selected,
+tr:nth-child(2n).selected {
+    background-color: rgba(0, 0, 0, 0.2) !important;
+}
+
+tr:hover,
+tr:nth-child(2n):hover {
+    background-color: rgba(112, 148, 142, 0.2) !important;
+}
+
+::ng-deep .ui-multiselect{
+    width: 200px !important;
+}
+.Group-2 label {
+    font-family: Verdana, Geneva, Tahoma, sans-serif !important;
+}
+th {
+    font-family: Verdana, Geneva, Tahoma, sans-serif !important;
+}

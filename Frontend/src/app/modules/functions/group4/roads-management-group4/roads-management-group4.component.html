@@ -1,0 +1,199 @@
+<div [@routerTransition]>
+    <div class="m-content">
+        <div class="m-portlet m-portlet__header m-portlet-mobile">
+            <div class="m-portlet__nav">
+                <ul>
+                    <li>
+                        <a routerLink="/app/admin/road-add" *ngIf="isGranted('Pages.Group4.Group4TuyenChay.Insert')">
+                            <i class="flaticon-add"></i>
+                            Thêm mới
+                        </a>
+                    </li>
+                    <li>
+                        <span [class.disabled]="!curRoadId" (click)="checkStatusBeforeEdit()" style="cursor: pointer"
+                            *ngIf="isGranted('Pages.Group4.Group4TuyenChay.Update')">
+                            <i class="flaticon-edit"></i> Chỉnh sửa
+                        </span>
+                    </li>
+                    <li>
+                        <span (click)="search()" *ngIf="isGranted('Pages.Group4.Group4TuyenChay.Search')">
+                            <i class="flaticon-search"></i>
+                            Tìm kiếm
+                        </span>
+                    </li>
+                    <li>
+                        <a [class.disabled]="!curRoadId" [routerLink]="['/app/admin/road-view']"
+                            [queryParams]="{ id: curRoadId }"
+                            *ngIf="isGranted('Pages.Group4.Group4TuyenChay.SearchById')">
+                            <i class="fa fa-eye"></i> Xem chi tiết
+                        </a>
+                    </li>
+                    <li>
+                        <span (click)="delete()" [class.disabled]="!curRoadId"
+                            *ngIf="isGranted('Pages.Group4.Group4TuyenChay.Delete')">
+                            <i class="fa fa-trash"></i> Xóa
+                        </span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="m-subheader pd-0">
+            <div class="d-flex align-items-center">
+                <div class="mr-auto col-xs-6">
+                    <span class="m-section__sub m-section__sub--separator">
+                        {{l("Trang chủ")}}
+                    </span>
+                    <span class="m-section__sub m-section__sub--separator active">
+                        <a routerLink="/app/admin/schedule-cars">{{l("Quản lý tuyến chạy")}} {{currentUserName}}</a>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="m-content road-content">
+        <div class="m-portlet m-portlet-mobile">
+            <div class="m-portlet__body">
+                <form #filterForm="ngForm" (submit)="search()">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label for="startDestination">Điểm đi</label>
+                            <div class="form-group">
+                                <p-dropdown id="startDistance" filterBy="label,value.name" styleClass="w-100"
+                                    (onChange)="onSelectStartDestination()" [options]="startDestinationOptions"
+                                    [(ngModel)]="startDestination" name="startDestination" filter="true">
+                                </p-dropdown>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="endDestination">Điểm đến</label>
+                            <div class="form-group">
+                                <p-dropdown id="endDestination" filterBy="label,value.name" styleClass="w-100"
+                                    (onChange)="onSelectEndDestination()" [options]="endDestinationOptions"
+                                    styleClass="w-100" [(ngModel)]="endDestination" name="endDestination" filter="true">
+                                </p-dropdown>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="roadStatus">Trạng thái</label>
+                                <p-dropdown [showClear]="true" id="roadStatus" styleClass="w-100"
+                                    [options]="roadStatusOptions" [(ngModel)]="roadStatus"
+                                    (onChange)="onSelectRoadStatus()" name="roadStatus">
+                                </p-dropdown>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-4">
+                            <div class="form-group m-form__group">
+                                <label for="roadStartDistanceInput">Số km bắt đầu</label>
+                                <input id="roadStartDistanceInput" #roadStartDistanceInput="ngModel"
+                                    [(ngModel)]="roadDTO.tuyenChay_SoKmBatDau" class="form-control" type="text"
+                                    autocomplete="off" name="roadDistance" maxlength="256"
+                                    pattern="^[+-]?([0-9]+([.][0-9]*)?|[.][0-9]+)$" />
+                                <p class="m-form__help">
+                                    {{l("   Số km phải là số và có thể nhập dấu '.' (Ví dụ: 200 hoặc 320.3)")}}
+                                </p>
+                                <validation-messages [formCtrl]="roadStartDistanceInput"
+                                    [errorDefs]="[{pattern: l('Vui lòng không nhập số hoặc các ký tự đặc biệt')}]">
+                                </validation-messages>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="form-group m-form__group">
+                                <label for="roadEndDistanceInput">Số km kết thúc</label>
+                                <input id="roadEndDistanceInput" #roadEndDistanceInput="ngModel"
+                                    [(ngModel)]="roadDTO.tuyenChay_SoKmKetThuc" class="form-control" type="text"
+                                    autocomplete="off" name="roadDistance" maxlength="256"
+                                    pattern="^[+-]?([0-9]+([.][0-9]*)?|[.][0-9]+)$" />
+                                <p class="m-form__help">
+                                    {{l("   Số km phải là số và có thể nhập dấu '.' (Ví dụ: 200 hoặc 320.3)")}}
+                                </p>
+                                <validation-messages [formCtrl]="roadEndDistanceInput"
+                                    [errorDefs]="[{pattern: l('Vui lòng không nhập các ký tự đặc biệt')}]">
+                                </validation-messages>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="submit" hidden [disabled]="!filterForm.form.valid"></button>
+                </form>
+                <div class="row align-items-center">
+                    <!--<Primeng-TurboTable-Start>-->
+                    <div class="primeng-datatable-container" [busyIf]="primengTableHelper.isLoading">
+                        <p-table #dataTable [value]="primengTableHelper.records"
+                            [paginator]="primengTableHelper.totalRecordsCount === 0 ? false : true"
+                            [rows]="primengTableHelper.defaultRecordsCountPerPage"
+                            [rowsPerPageOptions]="primengTableHelper.predefinedRecordsCountPerPage"
+                            totalRecords="totalRecords" pageLinks="3">
+                            <ng-template pTemplate="header">
+                                <tr>
+                                    <th>
+                                        Checkbox
+                                    </th>
+                                    <th pSortableColumn="no">
+                                        STT
+                                        <p-sortIcon field="no"></p-sortIcon>
+                                    </th>
+                                    <th pSortableColumn="tuyenChay_DiemDi">
+                                        Điểm đi
+                                        <p-sortIcon field="tuyenChay_DiemDi"></p-sortIcon>
+                                    </th>
+                                    <th pSortableColumn="tuyenChay_DiemDen">
+                                        Điểm đến
+                                        <p-sortIcon field="tuyenChay_DiemDen"></p-sortIcon>
+                                    </th>
+                                    <th class="text-right" pSortableColumn="tuyenChay_SoKm">
+                                        Số Km
+                                        <p-sortIcon field="tuyenChay_SoKm"></p-sortIcon>
+                                    </th>
+                                    <th class="text-right" pSortableColumn="tuyenChay_TrangThaiDuyet">
+                                        Trạng thái
+                                        <p-sortIcon field="tuyenChay_TrangThaiDuyet"></p-sortIcon>
+                                    </th>
+                                    <th class="text-center" pSortableColumn="tuyenChay_NgayTao">
+                                        Ngày khởi tạo
+                                        <p-sortIcon field="tuyenChay_NgayTao"></p-sortIcon>
+                                    </th>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-record="$implicit">
+                                <tr (dblclick)="onRowSelect(record.ma)">
+                                    <td>
+                                        <label class="m-radio" for="Theme_Default-{{record.ma}}">
+                                            <input id="Theme_Default-{{record.ma}}" name="Theme" [(ngModel)]="curRoadId"
+                                                value="{{ record.ma}}" type="radio">
+                                            <span></span>
+                                        </label>
+                                    </td>
+                                    <td>
+                                        <span>{{record['no']}}</span>
+                                    </td>
+                                    <td>
+                                        <span>{{record.tuyenChay_DiemDi}}</span>
+                                    </td>
+                                    <td>
+                                        <span>{{record.tuyenChay_DiemDen}}</span>
+                                    </td>
+                                    <td class="text-right">
+                                        <span>{{record.tuyenChay_SoKm}}</span>
+                                    </td>
+                                    <td class="text-right">
+                                        <span>{{record.tuyenChay_TrangThaiDuyet === "C" ? "Chưa duyệt" : record.tuyenChay_TrangThaiDuyet === "D" ? "Đã duyệt": "Từ chối" }}</span>
+                                    </td>
+                                    <td class="text-center">
+                                        <span>{{record.tuyenChay_NgayTao  | date: 'dd/mm/yyyy HH:mm:ss'}}</span>
+                                    </td>
+                                </tr>
+                            </ng-template>
+                        </p-table>
+                        <div class="primeng-no-data" *ngIf="primengTableHelper.totalRecordsCount == 0">
+                            {{l('NoData')}}
+                        </div>
+                    </div>
+                    <!--<Primeng-TurboTable-End>-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,36 @@
+.schedule-content {
+	padding-top: 0 !important;
+	label,
+	p {
+		font-family: sans-serif;
+	}
+	.schedule-form-control {
+		border: 1px solid rgba(0, 0, 0, 0.15);
+		padding: 0.5em 0.75em;
+		&:focus {
+			border: 1px solid #66afe9;
+		}
+	}
+}
+.schedule_btn {
+	font-family: sans-serif;
+	color: #5867dd;
+	font-weight: 400;
+	cursor: pointer;
+	&.disabled {
+		pointer-events: none;
+		color: rgba(63, 64, 71, 0.5) !important;
+		i {
+			color: rgba(63, 64, 71, 0.5) !important;
+		}
+	}
+}
+
+.schedule_btn_edit_readonly {
+	&.disabled {
+		display: none;
+	}
+}
+.display-none {
+	display: none !important;
+}
